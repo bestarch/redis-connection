@@ -2,15 +2,11 @@ package com.bestarch.demo.lettuce.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.RedisClusterClient;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
+import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 
 //@Configuration
 public class RedisConfig_Cluster {
@@ -40,23 +36,28 @@ public class RedisConfig_Cluster {
         return clusterClient;
 	}
 	
-	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
-		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(url, port);
-		redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-		RedisConnectionFactory redisConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
-		return redisConnectionFactory;
-	}
-
+	/**
+	 * Use following code to do redis operations
+	 */
+	/*
+		RedisClusterClient clusterClient = null; // Get this from Spring container
+		StatefulRedisClusterConnection<String, String> connection = clusterClient.connect();
+	    try {
+	        // Synchronous Commands
+	        RedisAdvancedClusterCommands<String, String> syncCommands = connection.sync();
+	
+	        // Example Command
+	        syncCommands.set("key", "value");
+	        String value = syncCommands.get("key");
+	        System.out.println("Retrieved value: " + value);
+	
+	        // Further operations...
+	    } finally {
+	        // Properly close the connection and client
+	        connection.close();
+	        clusterClient.shutdown();
+	    }
+	*/
 	
 
-	@Bean
-	RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
-		RedisTemplate<String, String> template = new RedisTemplate<>();
-		template.setDefaultSerializer(StringRedisSerializer.UTF_8);
-		template.setConnectionFactory(connectionFactory);
-		template.afterPropertiesSet();
-		return template;
-	}
-	
 }
