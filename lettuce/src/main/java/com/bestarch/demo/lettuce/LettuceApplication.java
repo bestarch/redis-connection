@@ -31,12 +31,12 @@ public class LettuceApplication implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
-		//basicRedisOperations.testRedisOperations();
-		//basicRedisOperations.testHashInRedisTemplate();
-		//basicRedisOperations.testStringInRedisTemplate();
-		//basicRedisOperations.checkSetAndGet();
-		//basicRedisOperations.test();
-		name();
+		basicRedisOperations.testRedisOperations();
+		basicRedisOperations.testHashInRedisTemplate();
+		basicRedisOperations.testStringInRedisTemplate();
+		basicRedisOperations.checkSetAndGet();
+		//basicRedisOperations.testRedisCluster();
+		//name();
 	}
 	
 	

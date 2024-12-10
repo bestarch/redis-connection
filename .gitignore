@@ -1,2 +1,8 @@
 
 lettuce/src/main/resources/redis_ca.pem
+jedis/.classpath
+jedis/.project
+/jedis/.settings
+/jedis/target
+.DS_Store
+.DS_Store

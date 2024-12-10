@@ -1,4 +1,4 @@
-package com.bestarch.demo.lettuce.operations;
+package com.bestarch.demo.jedis.operations;
 
 import java.io.IOException;
 
@@ -17,13 +17,10 @@ public interface BasicRedisOperations {
 	
 	public void testStringInRedisTemplate();
 	
-	public void testRedisCluster();
+	public void test();
 	
 	default public void checkSetAndGet() throws IOException {
-//		RedisTemplate<String, String> redisTemplate = getRedisTemplate();
-//		byte[] encoded = Files.readAllBytes(Paths.get("/random_text_3MB.txt"));
-//		String str = new String(encoded, "UTF-8");
-//		redisTemplate.opsForValue().set("April1", "April2"); 
+
 	}
 
 }

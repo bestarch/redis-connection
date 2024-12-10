@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
 
 @Primary
 @Component
-public class BasicRedisOperationsImpl implements BasicRedisOperations {
+public class BasicRedisOperationsImpl_RedisTemplateImpl implements BasicRedisOperations {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -85,7 +85,7 @@ public class BasicRedisOperationsImpl implements BasicRedisOperations {
 
 
 	@Override
-	public void test() {
+	public void testRedisCluster() {
 		String set1 = "countries1";
 		String set2 = "countries2";
 		
