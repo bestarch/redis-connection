@@ -16,6 +16,7 @@ import com.bestarch.demo.jedis.operations.BasicRedisOperations;
 
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.providers.MultiClusterPooledConnectionProvider;
+import redis.clients.jedis.util.KeyValue;
 
 @Primary
 @Component
@@ -48,6 +49,8 @@ public class BasicRedisOperationsImpl_UnifiedJedis implements BasicRedisOperatio
 		});
 		
 		Map<byte[], byte[]> mapFetchedFromRedis = jedis.hgetAll("fruit".getBytes());
+		KeyValue<Long, Long> res = jedis.waitAOF("key6", 0l, 1l, 100l);
+		logger.info(res.toString());
 		logger.info("Map fetched from Redis:: {}", mapFetchedFromRedis);
 	}
 	
