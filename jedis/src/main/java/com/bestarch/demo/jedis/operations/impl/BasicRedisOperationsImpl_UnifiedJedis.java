@@ -1,6 +1,9 @@
 package com.bestarch.demo.jedis.operations.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +39,28 @@ public class BasicRedisOperationsImpl_UnifiedJedis implements BasicRedisOperatio
 		Long size = jedis.dbSize();
 		logger.info("DB Size:: {}", size);
 		Map<byte[], byte[]> map = Map.of(
-				"item".getBytes(), "orange".getBytes(), 
-				"colour".getBytes(),"orange".getBytes(), 
-				"weight".getBytes(), "10".getBytes());
+				"item".getBytes(), "apple".getBytes(), 
+				"colour".getBytes(),"red".getBytes(), 
+				"weight".getBytes(), "10kg".getBytes());
 		jedis.hset("fruit".getBytes(), map);
+		IntStream.rangeClosed(1, 10).forEach(i -> {
+			jedis.set("key"+i, "val"+i);
+		});
+		
 		Map<byte[], byte[]> mapFetchedFromRedis = jedis.hgetAll("fruit".getBytes());
 		logger.info("Map fetched from Redis:: {}", mapFetchedFromRedis);
+	}
+	
+	
+	public List<String> getValues() {
+		List<String> vals = new ArrayList<>();
+		IntStream.rangeClosed(1, 10).forEach(i -> {
+			String val = jedis.get("key"+i);
+			vals.add(val);
+		});
+		Map<String, String> map = jedis.hgetAll("fruit");
+		vals.addAll(map.values());
+		return vals;
 	}
 
 
