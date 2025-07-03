@@ -11,6 +11,8 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import redis.clients.jedis.Connection;
 import redis.clients.jedis.DefaultJedisClientConfig;
@@ -54,8 +56,7 @@ public class RedisConfig_UnifiedJedis {
                 .connectionTimeoutMillis(2000)
                 .socketTimeoutMillis(2000);
         
-        // Set password if provided
-        if (password != null && !password.isEmpty()) {
+        if (ObjectUtils.isEmpty(password)) {
             clientConfigBuilder.password(password);
         }
         

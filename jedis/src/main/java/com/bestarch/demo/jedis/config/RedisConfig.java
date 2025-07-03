@@ -36,7 +36,6 @@ public class RedisConfig {
 	private String sslEnabled;
 	
 	
-	
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(url, port);
