@@ -15,17 +15,21 @@ import redis.clients.jedis.CommandArguments;
 import redis.clients.jedis.Protocol.Command;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.UnifiedJedis;
+import redis.clients.jedis.providers.MultiClusterPooledConnectionProvider;
 
 /**
- * Enable only when <link>RedisConfig_UnifiedJedis.java</link> configuration is enabled
+ * Enable only when <link>RedisConfig_MultiClusterFailover.java</link> configuration is enabled
  */
 //@Component
-public class BasicRedisOperationsImpl_UnifiedJedis implements BasicRedisOperations {
+public class MultiClusterRedisOperations implements BasicRedisOperations {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private UnifiedJedis jedis;
+	
+	@Autowired
+	MultiClusterPooledConnectionProvider multiClusterPooledConnectionProvider;
 	
 	
 	public void testRedisOperations() {
@@ -71,7 +75,11 @@ public class BasicRedisOperationsImpl_UnifiedJedis implements BasicRedisOperatio
 		
 		logger.info("Invoking WAITAOF command");
 		
-		
 	}
 	
+	
+	public void resetRedisFailure() {
+		multiClusterPooledConnectionProvider.setActiveMultiClusterIndex(1);
+	}
+
 }
