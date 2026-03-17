@@ -1,21 +1,19 @@
 package com.bestarch.demo.lettuce.config;
 
-import java.io.FileNotFoundException;
+import java.time.Duration;
 
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import io.lettuce.core.ClientOptions;
-import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisURI;
-import io.lettuce.core.protocol.ProtocolVersion;
 
 @Configuration
 public class RedisConfig_Simple {
@@ -33,7 +31,24 @@ public class RedisConfig_Simple {
 	public RedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(url, port);
 		redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-		RedisConnectionFactory redisConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
+		
+		// Pool config
+        GenericObjectPoolConfig<?> poolConfig = new GenericObjectPoolConfig<>();
+        poolConfig.setMaxTotal(10);       // max connections
+        poolConfig.setMaxIdle(5);
+        poolConfig.setMinIdle(2);
+        
+        LettuceClientConfiguration clientConfig = LettucePoolingClientConfiguration.defaultConfiguration();
+        
+        // If you don't want default settings, use the following code to customise the behavior. 
+        // LettuceClientConfiguration clientConfig =
+        //        LettucePoolingClientConfiguration.builder()
+        //                .commandTimeout(Duration.ofSeconds(5))   // command timeout
+        //                .shutdownTimeout(Duration.ZERO)
+        //                .poolConfig(poolConfig)                  // enable pooling
+        //                .build();
+		
+		RedisConnectionFactory redisConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration, clientConfig);
 		return redisConnectionFactory;
 	}
 
@@ -45,39 +60,5 @@ public class RedisConfig_Simple {
 		template.afterPropertiesSet();
 		return template;
 	}
-	
-	/**
-	 * Open Redis connection using RedisClient
-	 * @return
-	 * @throws FileNotFoundException
-	 */
-	
-//	@Bean
-//	public RedisClient redisClient() throws FileNotFoundException {
-//		
-//		RedisURI redisUri = RedisURI.Builder.redis(url)
-//                .withPort(port)
-//                .withPassword(password.toCharArray())
-//                .build();
-//		RedisClient redisClient = RedisClient.create(redisUri);
-//		
-//		ClientOptions clientOptions = ClientOptions.builder()
-//				.protocolVersion(ProtocolVersion.RESP3)
-//				.build();
-//		redisClient.setOptions(clientOptions);
-//		
-//			/* [Important]
-//			 *
-//			 * Following code snippet shows how to invoke Redis commands using StatefulRedisConnection
-//			 *
-//			 * StatefulRedisConnection<String, String> connection = redisClient.connect();
-//			 * RedisCommands<String, String> syncCommands = connection.sync();
-//			 * syncCommands.set("Hello", "World!!!"); 
-//			 * connection.close();
-//			 * redisClient.shutdown();
-//			 */
-//		 
-//		return redisClient;
-//	}
 
 }
